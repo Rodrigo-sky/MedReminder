@@ -1,14 +1,16 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
+import { StyleProp, ViewStyle } from "react-native";
+
 
 interface LogoProps {
   fillColor?: string;
-  width?: number;
+  style?: StyleProp<ViewStyle>;
 }
 
-const SVGComponent = ({ fillColor = "#111918", width}: LogoProps) => (  
+const SVGComponent = ({ fillColor = "#111918", style}: LogoProps) => (  
   <Svg
-    style={{aspectRatio: 1, width:width}}
+    style={[{aspectRatio: 1}, style]}
     viewBox="0 0 750 750"
   >
     <Path

@@ -10,8 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/checkbox": "^0.5.17",
+    "@react-native-community/datetimepicker": "^8.3.0",
+    "@react-native-community/slider": "^4.5.6",
     "react": "19.0.0",
     "react-native": "0.79.1",
+    "react-native-reanimated": "^3.17.5",
     "react-native-svg": "^15.11.2"
   },
   "devDependencies": {
