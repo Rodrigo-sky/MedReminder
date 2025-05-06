@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ScrollView,
   Switch,
+  TouchableOpacity,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -32,6 +33,7 @@ export default function HomeScreen({ isDarkMode }: HomeScreenProps) {
   const [items, setItems] = useState<ItemMed[]>([]);
   const [intervalHours, setIntervalHours] = useState(8);
   const [isDoseUnica, setIsDoseUnica] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const timesPerDay = Math.floor(24 / intervalHours);
   const color = isDarkMode ? '#fff' : '#000';
@@ -50,7 +52,7 @@ export default function HomeScreen({ isDarkMode }: HomeScreenProps) {
     return result;
   }
 
-  function handleAddItem() {
+  function handleSaveItem() {
     const horarios = isDoseUnica
       ? [formatTime(firstHorario)]
       : generateHorarios(firstHorario, intervalHours, timesPerDay);
@@ -60,11 +62,36 @@ export default function HomeScreen({ isDarkMode }: HomeScreenProps) {
       times_per_day: isDoseUnica ? 1 : timesPerDay,
       horarios,
     };
-    setItems([...items, newItem]);
+
+    if (editingIndex !== null) {
+      const updatedItems = [...items];
+      updatedItems[editingIndex] = newItem;
+      setItems(updatedItems);
+    } else {
+      setItems([...items, newItem]);
+    }
+
+    // Resetar estados
     setItemName('');
     setIntervalHours(8);
     setIsDoseUnica(false);
+    setEditingIndex(null);
     setModalVisible(false);
+  }
+
+  function handleDelete(index: number) {
+    const updatedItems = [...items];
+    updatedItems.splice(index, 1);
+    setItems(updatedItems);
+  }
+
+  function handleEdit(index: number) {
+    setEditingIndex(index);
+    setItemName(items[index].name);
+    setIntervalHours(24 / items[index].times_per_day);
+    setIsDoseUnica(items[index].times_per_day === 1);
+    setFirstHorario(new Date()); // Ajuste para definir o horário inicial
+    setModalVisible(true);
   }
 
   return (
@@ -79,10 +106,20 @@ export default function HomeScreen({ isDarkMode }: HomeScreenProps) {
           data={items}
           keyExtractor={(item, index) => index.toString()}
           scrollEnabled={false}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <View style={styles.listItem}>
               <Text style={{ color: color }}>{item.name} - {item.times_per_day}x ao dia</Text>
-              <Text style={{ color: color, fontSize: 12 }}>{item.horarios.join(', ')}</Text>
+              <Text style={{ color: color, fontSize: 12 }}>
+                {item.horarios.join(', ')}
+              </Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                <TouchableOpacity onPress={() => handleEdit(index)}>
+                  <Text style={{ color: 'blue', marginRight: 10 }}>Editar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDelete(index)}>
+                  <Text style={{ color: 'red' }}>Excluir</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
           style={{ marginTop: 20, width: '80%' }}
@@ -146,7 +183,7 @@ export default function HomeScreen({ isDarkMode }: HomeScreenProps) {
                 />
               )}
 
-              <Button title="Salvar" onPress={handleAddItem} />
+              <Button title="Salvar" onPress={handleSaveItem} />
               <Button title="Cancelar" onPress={() => setModalVisible(false)} color="red" />
             </View>
           </View>
