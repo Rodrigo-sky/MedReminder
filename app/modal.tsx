@@ -4,6 +4,7 @@ import { TextInput, Text, View } from '@/components/Themed';
 import { defaultMedication, Medication } from '@/components/models/Medication';
 import React, { useState } from 'react';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { MedicationService } from '@/services/MedicationService';
 
 export default function ModalScreen() {
 
@@ -16,7 +17,12 @@ export default function ModalScreen() {
   };
   const [showPicker, setShowPicker] = useState(false);
   const handleSubmit = () => {
-    Alert.alert('Dados do Medicamento', JSON.stringify(medication, null, 2));
+    if (!medication.name || !medication.time || !medication.medicationFrequency || !medication.daysOfUsage) {
+      Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
+      return;
+    }
+    MedicationService.save(medication)
+    
     console.log('Dados do Medicamento', medication);
   };
 
@@ -72,7 +78,7 @@ export default function ModalScreen() {
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
           <View style={styles.formContainer}>
-            <Text style={styles.label}>Vezes por dia</Text>
+            <Text style={styles.label}>Frequencia</Text>
             <TextInput
               style={styles.input}
               placeholder="Ex: 3"

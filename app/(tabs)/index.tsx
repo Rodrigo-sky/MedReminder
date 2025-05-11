@@ -1,9 +1,27 @@
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import MedReminder from '../../assets/images/MedReminder';
 import { Text, View } from '@/components/Themed';
+import { MedicationService } from '@/services/MedicationService';
+import { Medication } from '@/components/models/Medication';
+import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function TabOneScreen() {
-  console.log("toda vez que renderiza, vai fzer um get nos medicamentos");
+  const [medications, setMedications] = useState<Medication[]>([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchMedications = async () => {
+        const data = await MedicationService.getAll();
+        console.log('Medications:', data);
+        setMedications(data);
+      };
+
+      fetchMedications();
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
       <MedReminder style={styles.img} lightColor="#000" darkColor="#fff"/>
