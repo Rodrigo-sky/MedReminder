@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Alert, Switch, Platform, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView } from 'react-native';
+import { Button, StyleSheet, Alert, Switch, Platform, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { TextInput, Text, View } from '@/components/Themed';
 import { defaultMedication, Medication } from '@/components/models/Medication';
 import React, { useState } from 'react';
@@ -43,7 +43,12 @@ export default function ModalScreen() {
 
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
-          <Button title="Selecionar Horário" onPress={() => setShowPicker(true)} />
+          <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <TouchableOpacity style={styles.formContainer} onPress={() => setShowPicker(true)}>
+              <Text style={styles.label}>Horário</Text>
+              <Text style={{ paddingHorizontal: 10 }}>{medication.time || "00:00"}</Text>
+            </TouchableOpacity>
+          </View>
 
           {showPicker && (
             <DateTimePicker
@@ -63,6 +68,7 @@ export default function ModalScreen() {
             />
           )}
 
+
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
           <View style={styles.formContainer}>
@@ -71,8 +77,8 @@ export default function ModalScreen() {
               style={styles.input}
               placeholder="Ex: 3"
               keyboardType="numeric"
-              value={medication.timesPerDay}
-              onChangeText={(value) => handleChange('timesPerDay', value)}
+              value={medication.medicationFrequency.toString()}
+              onChangeText={(value) => handleChange('medicationFrequency', Number(value))}
             />
           </View>
 
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '90%',
     borderWidth: 0,
-    height: 50,
+    minHeight: 50,
   },
   title: {
     fontSize: 20,
@@ -143,9 +149,10 @@ const styles = StyleSheet.create({
   input: {
     textAlign: 'right',
     width: '65%',
-    height: 40,
+    minHeight: 40,
     paddingHorizontal: 10,
     borderRadius: 5,
+    alignContent: 'center',
   },
   buttonContainer: {
     marginTop: 20,

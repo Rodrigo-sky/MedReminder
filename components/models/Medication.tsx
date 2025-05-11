@@ -1,7 +1,7 @@
 export interface Medication {
   name: string;
   time: string;
-  timesPerDay: string;
+  medicationFrequency: number;
   daysOfUsage: string;
   isContinuos: boolean;
 }
@@ -9,7 +9,7 @@ export interface Medication {
 export const defaultMedication: Medication = {
   name: '',
   time: '',
-  timesPerDay: '',
+  medicationFrequency: 0,
   daysOfUsage: '',
   isContinuos: false,
 };
