@@ -1,5 +1,6 @@
 import React from 'react';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
@@ -9,11 +10,10 @@ import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome5>['name'];
+  name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
-  light?: boolean;
 }) {
-  return <FontAwesome5 size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -31,12 +31,12 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Medicamentos',
-          tabBarIcon: ({ color }) => <TabBarIcon name="pills" color={color} light/>,
+          tabBarIcon: ({ color }) => <TabBarIcon name="medkit" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <FontAwesome5
+                  <FontAwesome
                     name="plus-circle"
                     size={25}
                     color={Colors[colorScheme ?? 'light'].text}

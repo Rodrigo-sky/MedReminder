@@ -3,6 +3,7 @@ import MedReminder from '../../assets/images/MedReminder';
 import { Text, View } from '@/components/Themed';
 
 export default function TabOneScreen() {
+  console.log("toda vez que renderiza, vai fzer um get nos medicamentos");
   return (
     <View style={styles.container}>
       <MedReminder style={styles.img} lightColor="#000" darkColor="#fff"/>
