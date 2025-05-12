@@ -1,9 +1,22 @@
 import { StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { MedicationService } from '@/services/MedicationService';
+import React from 'react';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 
 export default function TabTwoScreen() {
+  useFocusEffect(
+    React.useCallback(() => {
+      const clearMedications = async () => {
+        await MedicationService.deleteAll();
+      };
+
+      clearMedications();
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab Two</Text>

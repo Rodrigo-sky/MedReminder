@@ -5,8 +5,10 @@ import { defaultMedication, Medication } from '@/components/models/Medication';
 import React, { useState } from 'react';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { MedicationService } from '@/services/MedicationService';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ModalScreen() {
+  const navigation = useNavigation();
 
   const [medication, setMedication] = useState<Medication>(defaultMedication);
   const handleChange = <K extends keyof Medication>(key: K, value: Medication[K]) => {
@@ -21,9 +23,9 @@ export default function ModalScreen() {
       Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
       return;
     }
-    MedicationService.save(medication)
-    
+    MedicationService.save(medication);
     console.log('Dados do Medicamento', medication);
+    navigation.goBack(); // Volta para a tela anterior
   };
 
   return (

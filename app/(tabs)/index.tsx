@@ -6,6 +6,7 @@ import { MedicationService } from '@/services/MedicationService';
 import { Medication } from '@/components/models/Medication';
 import { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import MedicationCard from '@/components/MedicationCard';
 
 export default function TabOneScreen() {
   const [medications, setMedications] = useState<Medication[]>([]);
@@ -22,12 +23,22 @@ export default function TabOneScreen() {
     }, [])
   );
 
-  return (
+  if (medications.length == 0) {
+    return (
     <View style={styles.container}>
       <MedReminder style={styles.img} lightColor="#000" darkColor="#fff"/>
       <Text style={styles.welcome}>Adicione um medicamento</Text>
     </View>
   );
+  } else {
+    return (
+      <View style={{padding: 20, width: '100%'}}>
+        {medications.map((medication, index) => (
+          <MedicationCard key={index} {...medication} />
+        ))}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

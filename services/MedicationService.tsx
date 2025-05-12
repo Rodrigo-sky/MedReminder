@@ -58,4 +58,13 @@ export const MedicationService = {
       console.error('Erro ao excluir medicamento:', error);
     }
   },
+
+  async deleteAll(): Promise<void> {
+    try {
+      await AsyncStorage.removeItem(MEDICATION_STORAGE_KEY);
+      console.log('Todos os medicamentos foram excluídos com sucesso.');
+    } catch (error) {
+      console.error('Erro ao excluir todos os medicamentos:', error);
+    }
+  },
 };
