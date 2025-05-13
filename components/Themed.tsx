@@ -4,6 +4,7 @@
  */
 
 import { Text as DefaultText, View as DefaultView, TextInput as DefaultTextInput } from 'react-native';
+import DropDownPicker, { DropDownPickerProps } from 'react-native-dropdown-picker';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from './useColorScheme';
@@ -15,6 +16,7 @@ type ThemeProps = {
 
 export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
+export type DropDownPickerThemedProps = ThemeProps & DropDownPickerProps<any>;
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -50,5 +52,21 @@ export function TextInput(props: TextProps & DefaultTextInput['props']) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultTextInput style={[{ color, backgroundColor }, style]} {...otherProps} />;
+}
+
+export function ThemedDropDownPicker(props: DropDownPickerThemedProps) {
+  const { lightColor, darkColor, style, dropDownContainerStyle, textStyle, labelStyle, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const textColor = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+
+  return (
+    <DropDownPicker
+      style={[{ backgroundColor }, style]}
+      dropDownContainerStyle={[{ backgroundColor }, dropDownContainerStyle]}
+      textStyle={[{ color: textColor }, textStyle]}
+      labelStyle={[{ color: textColor }, labelStyle]}
+      {...otherProps}
+    />
+  );
 }
 

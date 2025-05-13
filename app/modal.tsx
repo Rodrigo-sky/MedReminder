@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Alert, Switch, Platform, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
-import { TextInput, Text, View } from '@/components/Themed';
+import { ThemedDropDownPicker, TextInput, Text, View } from '@/components/Themed';
 import { defaultMedication, Medication } from '@/components/models/Medication';
 import React, { useState } from 'react';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -18,6 +18,14 @@ export default function ModalScreen() {
     }));
   };
   const [showPicker, setShowPicker] = useState(false);
+  const [frequencyOpen, setFrequencyOpen] = useState(false);
+  const [frequencyItems, setFrequencyItems] = useState(
+    Array.from({ length: 12 }, (_, i) => ({
+      label: `a cada ${i + 1} hora${i === 0 ? '' : 's'}`, 
+      value: i + 1,
+    }))
+  );
+
   const handleSubmit = () => {
     if (!medication.name || !medication.time || !medication.medicationFrequency || !medication.daysOfUsage) {
       Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
@@ -80,13 +88,22 @@ export default function ModalScreen() {
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
           <View style={styles.formContainer}>
-            <Text style={styles.label}>Frequencia</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex: 3"
-              keyboardType="numeric"
-              value={medication.medicationFrequency.toString()}
-              onChangeText={(value) => handleChange('medicationFrequency', Number(value))}
+            <Text style={styles.label}>Frequência</Text>
+            <ThemedDropDownPicker
+              open={frequencyOpen}
+              value={medication.medicationFrequency}
+              items={frequencyItems}
+              setOpen={setFrequencyOpen}
+              setValue={(callback) => handleChange('medicationFrequency', typeof callback === 'function' ? callback(medication.medicationFrequency) : callback)}
+              setItems={setFrequencyItems}
+              placeholder='Selecione a frequência'
+              scrollViewProps={{persistentScrollbar: true}}
+              style={[styles.dropdown, styles.input]}
+              dropDownContainerStyle={[styles.dropdownContainer, styles.input]}
+              textStyle={styles.dropdownText}
+              labelStyle={styles.dropdownLabel}
+              arrowIconStyle={{display: 'none'}}
+              onChangeValue={(value) => handleChange('medicationFrequency', value)}
             />
           </View>
 
@@ -164,6 +181,25 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
+  },
+  dropdown: {
+    width: '10%',
+    alignContent: 'center',
+    borderBottomColor: 'none', 
+    borderWidth: 0,
+    justifyContent: 'flex-end',
+  },
+  dropdownContainer: {
+    width: '10%',
+    borderBottomColor: 'none', 
+    borderWidth: 0,
+    justifyContent: 'flex-end',
+  },
+  dropdownText: {
+    textAlign: 'right',
+  },
+  dropdownLabel: {
+    textAlign: 'right',
   },
   switch: {
     // height: 40,
