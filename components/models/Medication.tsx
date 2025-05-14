@@ -4,6 +4,7 @@ export interface Medication {
   medicationFrequency: number;
   daysOfUsage: string;
   isContinuos: boolean;
+  times: string[];
 }
 
 export const defaultMedication: Medication = {
@@ -12,4 +13,5 @@ export const defaultMedication: Medication = {
   medicationFrequency: 0,
   daysOfUsage: '',
   isContinuos: false,
+  times: [],
 };

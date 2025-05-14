@@ -26,13 +26,37 @@ export default function ModalScreen() {
     }))
   );
 
+  const calculateTimes = (startTime: string, frequency: number): string[] => {
+    const times: string[] = [];
+    const [startHour, startMinute] = startTime.split(':').map(Number);
+
+    let currentHour = startHour;
+    let currentMinute = startMinute;
+
+    while (times.length < Math.floor(24 / frequency)) {
+      const formattedTime = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+      times.push(formattedTime);
+
+      currentHour += frequency;
+      if (currentHour >= 24) {
+        currentHour -= 24;
+      }
+    }
+
+    return times;
+  };
+
   const handleSubmit = () => {
     if (!medication.name || !medication.time || !medication.medicationFrequency || !medication.daysOfUsage) {
       Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
       return;
     }
-    MedicationService.save(medication);
-    console.log('Dados do Medicamento', medication);
+
+    const calculatedTimes = calculateTimes(medication.time, medication.medicationFrequency);
+    setMedication((prev) => ({ ...prev, times: calculatedTimes }));
+
+    MedicationService.save({ ...medication, times: calculatedTimes });
+    console.log('Dados do Medicamento', { ...medication, times: calculatedTimes });
     navigation.goBack(); // Volta para a tela anterior
   };
 
