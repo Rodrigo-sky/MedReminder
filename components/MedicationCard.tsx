@@ -8,7 +8,7 @@ export default function MedicationCard(medication: Medication) {
             <Text style={styles.title}>{medication.name}</Text>
             <Text style={styles.time}>{medication.time}</Text>
             <Text >{medication.times.length}x por dia</Text>
-            <Text >por {medication.daysOfUsage} dias</Text>
+            <Text >Durante {medication.daysOfUsage ? medication.daysOfUsage : 1} dia(s)</Text>
             <Text>{medication.times.map((time) => time).join(', ')}</Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
         </View>

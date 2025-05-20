@@ -19,14 +19,20 @@ export default function ModalScreen() {
   };
   const [showPicker, setShowPicker] = useState(false);
   const [frequencyOpen, setFrequencyOpen] = useState(false);
-  const [frequencyItems, setFrequencyItems] = useState(
-    Array.from({ length: 12 }, (_, i) => ({
-      label: `a cada ${i + 1} hora${i === 0 ? '' : 's'}`, 
+  const [frequencyItems, setFrequencyItems] = useState([
+    { label: 'Uso único', value: 0 },
+    ...Array.from({ length: 12 }, (_, i) => ({
+      label: `a cada ${i + 1} hora${i === 0 ? '' : 's'}`,
       value: i + 1,
     }))
-  );
+  ]);
 
   const calculateTimes = (startTime: string, frequency: number): string[] => {
+    if (frequency === 0) {
+      // Uso único: retorna apenas o horário inicial
+      return [startTime];
+    }
+
     const times: string[] = [];
     const [startHour, startMinute] = startTime.split(':').map(Number);
 
@@ -47,7 +53,7 @@ export default function ModalScreen() {
   };
 
   const handleSubmit = () => {
-    if (!medication.name || !medication.time || !medication.medicationFrequency || !medication.daysOfUsage) {
+    if (!medication.name || !medication.time) {
       Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
       return;
     }
@@ -67,7 +73,6 @@ export default function ModalScreen() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Text style={styles.title}>Modal</Text>
           {/* Use a light status bar on iOS to account for the black space above the modal */}
           <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
 
@@ -144,16 +149,18 @@ export default function ModalScreen() {
 
           <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
-          <View style={styles.formContainer}>
-            <Text style={styles.label}>Dias de uso</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex: 7"
-              keyboardType="numeric"
-              value={medication.daysOfUsage}
-              onChangeText={(value) => handleChange('daysOfUsage', value)}
-            />
-          </View>
+          {!medication.isContinuos && (
+            <View style={styles.formContainer}>
+              <Text style={styles.label}>Dias de uso</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: 7"
+                keyboardType="numeric"
+                value={medication.daysOfUsage}
+                onChangeText={(value) => handleChange('daysOfUsage', value)}
+              />
+            </View>
+          )}
 
           <View style={styles.buttonContainer}>
             <Button color={"blue"} title="Salvar" onPress={handleSubmit} />
