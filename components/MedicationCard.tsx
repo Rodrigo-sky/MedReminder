@@ -1,4 +1,4 @@
-import { TextInput, Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import { Medication } from './models/Medication';
 import { StyleSheet } from 'react-native';
 

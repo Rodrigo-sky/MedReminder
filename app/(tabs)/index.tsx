@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, RefreshControl } from 'react-native';
 import MedReminder from '../../assets/images/MedReminder';
-import { Text, View } from '@/components/Themed';
+import { Text, View, ScrollView } from '@/components/Themed';
 import { MedicationService } from '@/services/MedicationService';
 import { Medication } from '@/components/models/Medication';
 import { useState } from 'react';
@@ -10,33 +10,50 @@ import MedicationCard from '@/components/MedicationCard';
 
 export default function TabOneScreen() {
   const [medications, setMedications] = useState<Medication[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchMedications = async () => {
+    setRefreshing(true);
+    const data = await MedicationService.getAll();
+    setMedications(data);
+    setRefreshing(false);
+  };
 
   useFocusEffect(
     React.useCallback(() => {
-      const fetchMedications = async () => {
-        const data = await MedicationService.getAll();
-        console.log('Medications:', data);
-        setMedications(data);
-      };
-
       fetchMedications();
     }, [])
   );
 
   if (medications.length == 0) {
     return (
-    <View style={styles.container}>
-      <MedReminder style={styles.img} lightColor="#000" darkColor="#fff"/>
-      <Text style={styles.welcome}>Adicione um medicamento</Text>
-    </View>
-  );
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchMedications} />
+        }
+      ><View>
+          <MedReminder style={styles.img} lightColor="#000" darkColor="#fff" />
+          <Text style={styles.welcome}>Adicione um medicamento</Text>
+        </View>
+      </ScrollView>
+    );
   } else {
     return (
-      <View style={{padding: 20, width: '100%'}}>
-        {medications.map((medication, index) => (
-          <MedicationCard key={index} {...medication} />
-        ))}
-      </View>
+      <ScrollView
+        contentContainerStyle={{ padding: 20, width: '100%' }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchMedications} />
+        }
+      >
+        <View>
+          {medications.map((medication, index) => (
+            <Pressable key={index} onPress={() => console.log('Pressed! ' + medication)}>
+              <MedicationCard {...medication} />
+            </Pressable>
+          ))}
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -51,7 +68,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'semibold',
   },
-  img:{
+  img: {
     width: 200,
     height: 200,
     marginBottom: 20,

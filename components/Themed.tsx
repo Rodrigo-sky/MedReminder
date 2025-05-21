@@ -3,7 +3,7 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import { Text as DefaultText, View as DefaultView, TextInput as DefaultTextInput } from 'react-native';
+import { Text as DefaultText, View as DefaultView, TextInput as DefaultTextInput, ScrollView as DefaultScrollView, ScrollViewProps as DefaultScrollViewProps } from 'react-native';
 import DropDownPicker, { DropDownPickerProps } from 'react-native-dropdown-picker';
 
 import Colors from '@/constants/Colors';
@@ -17,6 +17,7 @@ type ThemeProps = {
 export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
 export type DropDownPickerThemedProps = ThemeProps & DropDownPickerProps<any>;
+export type ScrollViewProps = ThemeProps & DefaultScrollViewProps;
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -52,6 +53,12 @@ export function TextInput(props: TextProps & DefaultTextInput['props']) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultTextInput style={[{ color, backgroundColor }, style]} {...otherProps} />;
+}
+
+export function ScrollView(props: ScrollViewProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  return <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
 export function ThemedDropDownPicker(props: DropDownPickerThemedProps) {
