@@ -5,12 +5,14 @@ import { defaultMedication, Medication } from '@/components/models/Medication';
 import React, { useState } from 'react';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { MedicationService } from '@/services/MedicationService';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 export default function ModalScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const params = route.params as { medication?: Medication; index?: number };
 
-  const [medication, setMedication] = useState<Medication>(defaultMedication);
+  const [medication, setMedication] = useState<Medication>(params?.medication || defaultMedication);
   const handleChange = <K extends keyof Medication>(key: K, value: Medication[K]) => {
     setMedication((prev) => ({
       ...prev,
@@ -61,7 +63,11 @@ export default function ModalScreen() {
     const calculatedTimes = calculateTimes(medication.time, medication.medicationFrequency);
     setMedication((prev) => ({ ...prev, times: calculatedTimes }));
 
-    MedicationService.save({ ...medication, times: calculatedTimes });
+    if (typeof params?.index === 'number') {
+      MedicationService.update(params.index, { ...medication, times: calculatedTimes });
+    } else {
+      MedicationService.save({ ...medication, times: calculatedTimes });
+    }
     console.log('Dados do Medicamento', { ...medication, times: calculatedTimes });
     navigation.goBack(); // Volta para a tela anterior
   };
@@ -165,6 +171,19 @@ export default function ModalScreen() {
           <View style={styles.buttonContainer}>
             <Button color={"blue"} title="Salvar" onPress={handleSubmit} />
           </View>
+
+          {typeof params?.index === 'number' && (
+            <View style={styles.buttonContainer}>
+              <Button
+                color="red"
+                title="Excluir"
+                onPress={() => {
+                  MedicationService.delete(params.index!);
+                  navigation.goBack();
+                }}
+              />
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

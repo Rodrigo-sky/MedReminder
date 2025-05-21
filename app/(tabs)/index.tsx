@@ -5,12 +5,13 @@ import { Text, View, ScrollView } from '@/components/Themed';
 import { MedicationService } from '@/services/MedicationService';
 import { Medication } from '@/components/models/Medication';
 import { useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import MedicationCard from '@/components/MedicationCard';
 
 export default function TabOneScreen() {
   const [medications, setMedications] = useState<Medication[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation<any>();
 
   const fetchMedications = async () => {
     setRefreshing(true);
@@ -48,7 +49,7 @@ export default function TabOneScreen() {
       >
         <View>
           {medications.map((medication, index) => (
-            <Pressable key={index} onPress={() => console.log('Pressed! ' + medication)}>
+            <Pressable key={index} onPress={() => navigation.navigate('modal', { medication, index })}>
               <MedicationCard {...medication} />
             </Pressable>
           ))}
