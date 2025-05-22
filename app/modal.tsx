@@ -92,7 +92,7 @@ export default function ModalScreen() {
             />
           </View>
 
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <View style={styles.separator} lightColor="#eee" darkColor="#ffffff40" />
 
           <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <TouchableOpacity style={styles.formContainer} onPress={() => setShowPicker(true)}>
@@ -120,7 +120,7 @@ export default function ModalScreen() {
           )}
 
 
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <View style={styles.separator} lightColor="#eee" darkColor="#ffffff40" />
 
           <View style={styles.formContainer}>
             <Text style={styles.label}>Frequência</Text>
@@ -142,7 +142,7 @@ export default function ModalScreen() {
             />
           </View>
 
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <View style={styles.separator} lightColor="#eee" darkColor="#ffffff40" />
 
           <View style={styles.formContainer}>
             <Text style={styles.label}>Uso contínuo?</Text>
@@ -153,7 +153,7 @@ export default function ModalScreen() {
             />
           </View>
 
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+          <View style={styles.separator} lightColor="#eee" darkColor="#ffffff40" />
 
           {!medication.isContinuos && (
             <View style={styles.formContainer}>
